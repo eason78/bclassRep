@@ -1,11 +1,10 @@
 package danmu.main;
 
-
-import java.awt.Font;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
-import javax.swing.JPanel;
+
+import org.json.JSONException;
 
 public class GetMessageThread implements Runnable{
 
@@ -19,36 +18,30 @@ public class GetMessageThread implements Runnable{
 	
 	@Override
 	public void run() {
-		int step = 10;
-		RequestMessage request = new RequestMessage();
-		request.requestMessage();
-		ArrayList<Message> onScreen = request.getMessage();
 		while(engine.isRun()) {
-        	for(int i=0;i<onScreen.size();i++){
-        		Message message = onScreen.get(i);
-        		int x = message.getX();
-        		int y = message.getY();
-        		if(x > step){
-        			x -= step;
-        			message.setX(x);
-        			message.msg.setBounds(x,y,800,500);
-        			transparentWindow.add(message.msg);
-        		}
-        		else{
-        			transparentWindow.remove(message.msg);
-        			RequestMessage.removeMessage(i);
-        		}
-        		
-        	}
-			
+			ArrayList<Message> messages = null;
+			try {
+				messages = RequestMessage.requestMessage();
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			for (Message msg : messages) {
+				System.out.println("msg: " + msg.getMsg());
+				
+				JLabel tmplabel = new JLabel(msg.getMsg());
+            	int y = (int) (Math.random()*100);
+            	tmplabel.setBounds(100, y, 100, 100);
+//            	tmplabel.setFont(new java.awt.Font("����", Font.BOLD, 33));
+                transparentWindow.add(tmplabel);
+			}
+			transparentWindow.repaint();
 			
 			try {
-				Thread.sleep(100);
+				Thread.sleep(3000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			
-			transparentWindow.repaint();
 		}
 		
 	}
