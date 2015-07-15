@@ -31,7 +31,7 @@ public class Message {
 		super();
 		this.msg = new JLabel(str);
 		x = 1300;
-		y =  (int) (Math.random()*400) + 400;
+		y = (int) (Math.random()*400);
 	}
 
 	public String getMsg() {
