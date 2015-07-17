@@ -69,10 +69,9 @@ public class Message {
 		this.fontSize = fontSize;
 		this.fontColor = fontColor;
 		this.isImportant = isImportant;
-		
 		// ÍÂ²Û
 		if (isImportant == 0) {
-			y = (int) (Math.random()*100) + 300;
+			this.y = (int) (Math.random()*100) + this.y;
 			step = 10;
 		} else {
 			y = (int) (Math.random()*300);

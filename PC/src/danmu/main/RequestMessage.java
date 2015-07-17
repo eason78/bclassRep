@@ -9,7 +9,9 @@ import java.net.HttpURLConnection;
 import java.net.SocketException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+
 
 
 
@@ -63,7 +65,8 @@ public class RequestMessage {
 	public void requestMessage(String code,int limitNum)  {
 		if (engine.isRun()) {
 			try {
-				System.out.print(code);
+				
+				
 				URL url = new URL("http://172.18.33.10:3000/get_bullets?bcode="+code+"&limit="+limitNum);
 				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 				conn.setDoOutput(true);
@@ -84,15 +87,16 @@ public class RequestMessage {
 					stringBuffer.append(buf);
 				}
 				String result = stringBuffer.toString();
-				System.out.print(result);
+				
 				JSONArray array;
 				try {
 					array = new JSONArray(result);
 					for (int i = 0; i < array.length(); i++) {
 						JSONObject object = array.getJSONObject(i);
-						System.out.println(object.getString("texts"));
-						String text = URLDecoder.decode(object.getString("texts"),"UTF-8");
-						System.out.println(text);
+						
+						String la = object.getString("texts");
+						String iso = new String(la.getBytes("GBK"),"ISO-8859-1"); 
+						String text =new String(iso.getBytes("ISO-8859-1"),"UTF-8").toString();
 						Message msg = new Message(text,
 								object.getInt("fontSize"),
 								object.getInt("fontColor"),
@@ -108,9 +112,11 @@ public class RequestMessage {
 				in.close();
 				bufferedReader.close();
 				conn.disconnect();
+	            
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
 		}
 	}
 	

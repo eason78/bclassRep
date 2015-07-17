@@ -25,6 +25,7 @@ public class TransparentWindow extends JWindow{
 		engine.setRun(true);
 		th = new Thread(new GetMessageThread(this,code,limit));
 		th.start();
+		
 	}
 	
 	public void stopDanmu() {

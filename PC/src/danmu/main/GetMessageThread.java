@@ -23,10 +23,11 @@ public class GetMessageThread implements Runnable{
 	
 	@Override
 	public void run() {
+		while(engine.isRun()) {
 		RequestMessage request = new RequestMessage();
 		request.requestMessage(code,limitNum);
 		ArrayList<Message> onScreen = request.getMessage();
-		while(engine.isRun()) {
+		if(engine.isRun()) {
         	for(int i=0;i<onScreen.size();i++){
         		Message message = onScreen.get(i);
         		int x = message.getX();
@@ -38,7 +39,7 @@ public class GetMessageThread implements Runnable{
         			message.msg.setBounds(x,y,800,500);
         			Color fontColor = getColor(message.getFontColor());
         			int fontSize = getFontSize(message.getFontSize());
-        			message.msg.setBackground(fontColor);
+        			message.msg.setForeground(fontColor);
         			message.msg.setFont(new Font("ËÎÌו", Font.PLAIN, fontSize));
         			transparentWindow.add(message.msg);
         		}
@@ -57,6 +58,7 @@ public class GetMessageThread implements Runnable{
 			
 			transparentWindow.repaint();
 		}
+		}
 		
 	}
 
@@ -70,10 +72,10 @@ public class GetMessageThread implements Runnable{
 			size = 18;
 			break;
 		case 2:
-			size = 22;
+			size = 24;
 			break;
 		case 3:
-			size = 26;
+			size = 30;
 		default:
 			break;
 		}
@@ -82,7 +84,9 @@ public class GetMessageThread implements Runnable{
 
 	private Color getColor(int colorFlag) {
 		Color color = null;
+		
 		switch (colorFlag) {
+		
 		case 0:
 			color = Color.RED;
 			break;
@@ -99,6 +103,7 @@ public class GetMessageThread implements Runnable{
 			color = Color.BLACK;
 			break;
 		}
+		
 		return color;
 	}
 
