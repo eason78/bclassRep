@@ -3,6 +3,7 @@ package com.optimus.bclass;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Looper;
 import android.text.Editable;
@@ -19,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,7 +58,7 @@ public class SendDanmuActivity extends Activity {
     public static Activity sendDanmuActivity = null;
     public Intent intent;
     public int color = 0;
-    public int size = 3;
+    public int size = 2;
     public int important = 0;
     // protected TextView chatListText = null;
     // protected LayoutInflater layoutInflater = null;
@@ -109,8 +111,8 @@ public class SendDanmuActivity extends Activity {
                             try {
                                 JSONObject jsonObject = new JSONObject();
                                 jsonObject.put("key", key);
-                                jsonObject.put("frontsize", color);
-                                jsonObject.put("frontcolor", size);
+                                jsonObject.put("frontsize", size);
+                                jsonObject.put("frontcolor", color);
                                 jsonObject.put("danmu", danmu.toString());
                                 jsonObject.put("important",important);
                                 StringEntity entity = new StringEntity(jsonObject.toString(), HTTP.UTF_8);
@@ -216,9 +218,6 @@ public class SendDanmuActivity extends Activity {
                 } else if (checkedId == R.id.lRadioButton) {
                     sampleSizeColor.setTextSize(TypedValue.COMPLEX_UNIT_PT, 10);
                     size = 2;
-                } else if (checkedId == R.id.xlRadioButton) {
-                    sampleSizeColor.setTextSize(TypedValue.COMPLEX_UNIT_PT, 11);
-                    size = 3;
                 }
             }
         });
@@ -241,6 +240,31 @@ public class SendDanmuActivity extends Activity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        setParams();
+    }
+
+    public void setParams() {
+        Rect frame = new Rect();
+        getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+
+        RelativeLayout chatTitle = (RelativeLayout)findViewById(R.id.chat_title);
+        LinearLayout chatBottom = (LinearLayout)findViewById(R.id.chat_bottom_linear);
+        LinearLayout setSizeColor = (LinearLayout)findViewById(R.id.set_size_color);
+        double radio = frame.height() > frame.width() ? 0.08 : 0.15;
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,(int)(frame.height()  * radio + 0.5f));
+        params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,(int)(frame.height()  * radio + 0.5f));
+        params1.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,(int)(frame.height()  * 0.4f + 0.5f));
+        params2.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
+        chatTitle.setLayoutParams(params);
+        chatBottom.setLayoutParams(params1);
+        setSizeColor.setLayoutParams(params2);
     }
 //    @Override
 //    public boolean onTouchEvent(MotionEvent event) {
