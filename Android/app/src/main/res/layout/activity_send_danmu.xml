@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/set_size_color">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/chat_title"
             android:layout_width="fill_parent"
             android:layout_height="50dip"
@@ -21,7 +21,7 @@
 
             <Button
                 android:id="@+id/chat_back_button"
-                android:layout_width="60dip"
+                android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:background="#0090ff"
                 android:text="返回"
@@ -30,34 +30,35 @@
 
             <TextView
                 android:id="@+id/chat_contact_name"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:layout_gravity="center_vertical"
                 android:layout_marginRight="60dip"
-                android:layout_weight="1"
+                android:layout_centerInParent="true"
                 android:gravity="center"
                 android:text="发送弹幕"
                 android:textColor="@android:color/white"
                 android:textSize="9pt" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/chat_bottom_linear"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="48dip"
             android:layout_alignParentBottom="true"
             android:background="#eeeeee"
+            android:weightSum="10"
             android:orientation="horizontal"
-            android:paddingBottom="7dip"
-            android:paddingTop="7dip">
+            android:paddingBottom="8dip"
+            android:paddingTop="8dip">
 
             <ImageButton
                 android:id="@+id/chat_bottom_add"
-                android:layout_width="25dip"
-                android:layout_height="25dip"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.5"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="8dip"
+                android:scaleType="centerInside"
                 android:background="#eeeeee"
                 android:src="@mipmap/add" />
 
@@ -66,17 +67,17 @@
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="7dip"
-                android:layout_marginRight="7dip"
-                android:layout_weight="1"
+                android:layout_weight="7"
                 android:background="#ffffff" />
 
             <Button
                 android:id="@+id/chat_bottom_sendbutton"
-                android:layout_width="50dip"
+                android:layout_width="0dp"
                 android:layout_height="fill_parent"
+                android:layout_weight="1.5"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="4dip"
+                android:layout_marginLeft="8dip"
+                android:layout_marginRight="8dip"
                 android:background="#0090ff"
                 android:gravity="center"
                 android:text="发送"
@@ -102,22 +103,27 @@
         android:layout_height="150dip"
         android:layout_alignParentBottom="true"
         android:background="#eeeeee"
+        android:weightSum="3"
         android:orientation="vertical"
         android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             >
             <CheckBox
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="fill_parent"
                 android:id="@+id/setImport"
+                android:layout_centerInParent="true"
+                android:layout_alignParentLeft="true"
+                android:gravity="center_vertical"
                 android:text="重要"/>
             <TextView
                 android:id="@+id/sample_size_color"
-                android:layout_width="80dip"
-                android:layout_height="40dip"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:text="弹幕"
@@ -128,100 +134,97 @@
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="55dip"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:weightSum="7"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="0.1"
+                android:layout_weight="2"
                 android:gravity="center_vertical"
                 android:text="字体大小："
                 android:textSize="8pt" />
 
             <RadioGroup
                 android:id="@+id/sizeGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
                 android:layout_gravity="center"
                 android:layout_marginRight="5dip"
-                android:layout_weight="1"
+                android:layout_weight="5"
+                android:weightSum="3"
                 android:orientation="horizontal">
 
                 <RadioButton
                     android:id="@+id/sRadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:checked="true"
                     android:gravity="center_vertical"
                     android:text="小"
-                    android:textColor="#ff0000"
+                    android:textColor="#000000"
                     android:textSize="8pt" />
 
                 <RadioButton
                     android:id="@+id/mRadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="中"
-                    android:textColor="#0000ff"
-                    android:textSize="8pt" />
+                    android:textColor="#000000"
+                    android:textSize="9pt" />
 
                 <RadioButton
                     android:id="@+id/lRadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="大"
-                    android:textColor="#00ff00"
-                    android:textSize="8pt" />
-
-                <RadioButton
-                    android:id="@+id/xlRadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="特大"
                     android:textColor="#000000"
-                    android:textSize="8pt" />
+                    android:textSize="10pt" />
             </RadioGroup>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="55dip"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:weightSum="7"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="5dip"
                 android:gravity="center_vertical"
                 android:text="字体颜色："
+                android:layout_weight="2"
                 android:textSize="8pt" />
 
             <RadioGroup
                 android:id="@+id/colorGroup"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_weight="5"
+                android:weightSum="4"
                 android:layout_marginRight="5dip"
                 android:orientation="horizontal">
 
                 <RadioButton
                     android:id="@+id/redRadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
                     android:text="红色"
@@ -230,8 +233,9 @@
 
                 <RadioButton
                     android:id="@+id/blueRadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
                     android:text="蓝色"
@@ -240,8 +244,9 @@
 
                 <RadioButton
                     android:id="@+id/greenRadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
                     android:text="绿色"
@@ -250,8 +255,9 @@
 
                 <RadioButton
                     android:id="@+id/blackRadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
                     android:layout_gravity="center_vertical"
                     android:checked="true"
                     android:gravity="center_vertical"

@@ -2,16 +2,21 @@ package com.optimus.bclass;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.SyncStateContract;
 import android.text.method.ScrollingMovementMethod;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +55,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //setParams();
         keyIn = (EditText) findViewById(R.id.keyInText);
         infoTextView = (TextView) findViewById(R.id.infoText);
         infoTextView.setMovementMethod(ScrollingMovementMethod.getInstance());
@@ -69,7 +75,7 @@ public class MainActivity extends Activity {
                         welText.setVisibility(View.VISIBLE);
                         sendButton.setVisibility(View.VISIBLE);
                         runRequestThread = true;
-                        //Toast.makeText(MainActivity.this, "send message succeed", Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(MainActivity.this, "send message succeed", Toast.LENGTH_SHORT).show();
                         break;
                     case FAIL:
                         Toast.makeText(MainActivity.this, "错误的口令或网络错误", Toast.LENGTH_SHORT).show();
@@ -88,6 +94,8 @@ public class MainActivity extends Activity {
                                 String text = "";
                                 for (HashMap<String, Object> l : list) {
                                     text += (String) (l.get("text"));
+                                    if (!((String) (l.get("text"))).equals(""))
+                                        text += "\n";
                                 }
                                 if (!text.equals(""))
                                     infoTextView.setText(text);
@@ -101,7 +109,7 @@ public class MainActivity extends Activity {
                         }
                         break;
                     case FAIL:
-                        //Toast.makeText(MainActivity.this, "错误的口令或网络错误", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "错误的口令或网络错误", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -110,39 +118,41 @@ public class MainActivity extends Activity {
             @Override
             public void run() {
                 while (true) {
-                    try {
-                        String value = URLEncoder.encode(keyIn.getText().toString(), "UTF-8");
-                        URL url = new URL(path + value);
-                        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-                        byte[] data = new byte[1024];
-                        int len;
-                        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                        con.setRequestMethod("GET");
-                        int code = con.getResponseCode();
-                        Message message = new Message();
-                        if (code == 200) {
-                            InputStream inStream = con.getInputStream();
-                            while ((len = inStream.read(data)) != -1) {
-                                outStream.write(data, 0, len);
+                    if (runRequestThread) {
+                        try {
+                            String value = URLEncoder.encode(keyIn.getText().toString(), "UTF-8");
+                            URL url = new URL(path + value);
+                            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+                            byte[] data = new byte[1024];
+                            int len;
+                            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                            con.setRequestMethod("GET");
+                            int code = con.getResponseCode();
+                            Message message = new Message();
+                            if (code == 200) {
+                                InputStream inStream = con.getInputStream();
+                                while ((len = inStream.read(data)) != -1) {
+                                    outStream.write(data, 0, len);
+                                }
+                                inStream.close();
+                                message.what = SUCCEED;
+                                message.obj = new String(outStream.toByteArray());
+                                handlerRequest.sendMessage(message);
+                            } else {
+                                message.what = FAIL;
+                                handlerRequest.sendMessage(message);
                             }
-                            inStream.close();
-                            message.what = SUCCEED;
-                            message.obj = new String(outStream.toByteArray());
-                            handlerRequest.sendMessage(message);
-                        } else {
-                            message.what = FAIL;
-                            handlerRequest.sendMessage(message);
+                        } catch (ClientProtocolException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            //Toast.makeText(MainActivity.this, "unknown network fail", Toast.LENGTH_SHORT).show();
                         }
-                    } catch (ClientProtocolException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        // Toast.makeText(MainActivity.this, "unknown network fail", Toast.LENGTH_SHORT).show();
-                    }
-                    try {
-                        sleep(3000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        try {
+                            sleep(3000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -177,12 +187,15 @@ public class MainActivity extends Activity {
                                     e.printStackTrace();
                                 } catch (IOException e) {
                                     e.printStackTrace();
-                                    //Toast.makeText(MainActivity.this, "unknown network fail", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "unknown network fail", Toast.LENGTH_SHORT).show();
                                 }
                                 Looper.loop();
                             }
                         }.start();
                     }
+//                    keyInLayout.setVisibility(View.GONE);
+//                    welText.setVisibility(View.VISIBLE);
+//                    sendButton.setVisibility(View.VISIBLE);
                 } else {
                     ((Button) v).setText("进入教室");
                     runRequestThread = false;
@@ -241,5 +254,35 @@ public class MainActivity extends Activity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        setParams();
+    }
+    public void setParams() {
+        Rect frame = new Rect();
+        getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+
+        TextView titltText = (TextView)findViewById(R.id.titleText);
+        LinearLayout welLayout = (LinearLayout)findViewById(R.id.welLayout);
+        LinearLayout buttonLayout = (LinearLayout)findViewById(R.id.buttonLayout);
+        TextView infoTitleText = (TextView)findViewById(R.id.infoTitleText);
+        TextView infoText = (TextView)findViewById(R.id.infoText);
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,(int)(frame.height()  * 0.1f + 0.5f));
+        params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,(int)(frame.height()  * 0.2f + 0.5f));
+        params1.addRule(RelativeLayout.BELOW,titltText.getId());
+        RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,(int)(frame.height()  * 0.1f + 0.5f));
+        params2.addRule(RelativeLayout.BELOW,welLayout.getId());
+        RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,(int)(frame.height()  * 0.1f + 0.5f));
+        params3.addRule(RelativeLayout.BELOW, buttonLayout.getId());
+        RelativeLayout.LayoutParams params4 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,(int)(frame.height()  * 0.5f + 0.5f));
+        params4.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        titltText.setLayoutParams(params);
+        welLayout.setLayoutParams(params1);
+        buttonLayout.setLayoutParams(params2);
+        infoTitleText.setLayoutParams(params3);
+        infoText.setLayoutParams(params4);
     }
 }
